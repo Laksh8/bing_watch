@@ -1,0 +1,105 @@
+{% load static %}
+<!--
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="{% static 'js/js.js' %}"></script>
+
+<!------ Include the above in your HEAD tag ---------->
+
+<!--
+Author : Maniruzzaman Akash
+Email  : manirujjamanakash@gmail.com
+-->
+
+<!--To Work with icons-->
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+
+{% if comments is not None %}
+    {% for comment in comments %}
+<div class="container">
+
+	<div class="card">
+	    <div class="card-body">
+	        <div class="row">
+        	    <div class="col-md-2">
+					{% if comment.user.profile.image != '' %}
+					<a href="{{comment.user.profile.image.url}}"><img src="{{comment.user.profile.image.url}}" style="border-radius:50%;height:150px;width:150px" class="img img-rounded img-fluid"/></a>
+        	        <p class="text-secondary text-center">{{comment.time.date}}</p>
+        	    	{% else %}
+        	        <img src="{% static 'default.jpg' %}" style="border-radius:50%;height:150px;width:150px" class="img img-rounded img-fluid"/></a>
+        	        <p class="text-secondary text-center">{{comment.time.date}}</p>
+					{% endif %}
+				</div>
+        	    <div class="col-md-10">
+        	        <p>
+        	            <a class="float-left" href="https://maniruzzaman-akash.blogspot.com/p/contact.html"><strong>{{comment.user.first_name}} {{comment.user.last_name}}</strong></a>
+        	       </p><br>
+        	       <div class="clearfix">{{comment.comment}}</div>
+
+        	        <p>{% if user.is_authenticated %}
+        	            <a class="float-right btn text-white btn-danger"> <i class="fa fa-heart"></i> Like</a>
+						{% endif %}
+						{% if user.id == comment.user.id %}
+        	            <a style="position:absolute;margin-left:97%;margin-top:-13%" class="float-right btn text-white btn-danger" href="/delete_things/delete_comments/{{comment.id}}">X</a>
+						{% endif %}
+						{% if user.is_authenticated %}
+							<form method="post" class="ajax" action="/reply/{{comment.id}}">
+                            	{% csrf_token %}
+                            	<input style="width:75%;margin-left:5%;margin-top:-1.7%" type="text" placeholder="Reply" name="reply" class="form-control" required>
+                            	<input style="margin-left:82%;margin-top:-8%;" type="submit" value="Reply" class="btn btn-primary">
+                        	</form>
+						{% endif %}
+        	       </p>
+        	    </div>
+                <div class="container">
+{% for values in replys %}
+                    {% for reply in values %}
+                    {% if reply.comment.id == comment.id %}
+
+
+	<div class="card">
+	    <div class="card-body">
+	        <div class="row">
+        	    <div class="col-md-2">
+					{% if reply.user.profile.image != '' %}
+					<a href="{{reply.user.profile.image.url}}"><img src="{{reply.user.profile.image.url}}" style="border-radius:50%;height:150px;width:150px" class="img img-rounded img-fluid"/></a>
+        	        <p class="text-secondary text-center">{{reply.time.date}}</p>
+        	    	{% else %}
+        	        <img src="{% static 'default.jpg' %}" style="border-radius:50%;height:150px;width:150px" class="img img-rounded img-fluid"/></a>
+        	        <p class="text-secondary text-center">{{reply.time.date}}</p>
+					{% endif %}
+				</div>
+        	    <div class="col-md-10">
+        	        <p>
+        	            <a class="float-left" href="https://maniruzzaman-akash.blogspot.com/p/contact.html"><strong>{{reply.user.first_name}} {{reply.user.last_name}}</strong></a>
+        	       </p><br>
+        	       <div class="clearfix">{{reply.reply}}</div>
+
+        	        <p>{% if user.is_authenticated %}
+        	            <a class="float-right btn text-white btn-danger"> <i class="fa fa-heart"></i> Like</a>
+						{% endif %}
+						{% if user.id == reply.user.id %}
+        	            <a style="position:absolute;margin-left:97%;margin-top:-13%" class="float-right btn text-white btn-danger" href="/delete_things/delete_reply/{{reply.id}}">X</a>
+						{% endif %}
+					</p>
+        	    </div>
+	        </div>
+		</div>
+	</div><br>
+
+					{% endif %}
+					{% endfor %}
+					{% endfor %}
+
+				</div>
+	        </div>
+		</div>
+	</div>
+</div><br><br>
+
+{% endfor %}
+{% endif %}

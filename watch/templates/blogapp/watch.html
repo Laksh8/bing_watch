@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block head %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+  $("button").click(function(){
+    $("#div1").load("/comments{{request.path}}");
+  });
+});
+</script>
+<!--
+<script>
+$(document).ready(function(){
+  $("#submit").click(function(){
+    $("#div2").post("/comment_input{{request.path}}");
+  });
+});
+</script>
+-->
+
+<title>Bing Watch</title>
+    <style>
+        #video{
+            width:70%;
+            height:70%;
+        }
+
+    </style>
+{% endblock %}
+{% block content %}
+
+<div class="container">
+    <center>
+        <h1>{{video.title}}</h1><hr>
+    <video id="video" style="border-radius:50px" autoplay controls >
+        <source src="{{video.video.url}}" type="video/mp4">
+
+    </video>
+    </center>
+</div>
+<br>
+<div class="container">
+    <button class="p-2 bg-dark text-dark" style="border-radius:15px;width:100%"><h3 class=" text-secondary">Comments</h3></button> <hr>
+</div>
+{% if user.is_authenticated %}
+<div class="container">
+    <div >
+        <b>Comments :- </b><br>
+
+    <form id="div2" class="ajax" method="post" action="/watch/{{video.id}}">{% csrf_token %}
+    <textarea name="comment" style="width:97.5%;height:100px" class="form-control" required></textarea>
+     <br><input type="submit" style="margin-left:92%" class="btn btn-danger" id="submit" >
+    </form>
+
+<br><br>
+
+    </div>
+
+    {% endif %}
+</div>
+<div class="container">
+<div id="div1">
+    </div>
+</div>
+{% endblock %}
